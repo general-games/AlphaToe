@@ -30,7 +30,6 @@ namespace tictactoe
                 int round = 0;
                 draw.Progress(counter, episodes);
                 draw.Wins(player1Wins, player2Wins, drawMatch);
-                Console.WriteLine(state.Probability);
                 while (!gameOver)
                 {
                     if (!gameOver)

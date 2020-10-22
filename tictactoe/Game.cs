@@ -18,6 +18,7 @@ namespace tictactoe
             while (true)
             {
                 draw.Clear();
+                draw.GameTitle();
                 draw.Start();
                 draw.EnterEpisodes();
                 bool isValidNum = int.TryParse(Console.ReadLine(), out int episodes);

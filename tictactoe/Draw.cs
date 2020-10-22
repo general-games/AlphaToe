@@ -6,9 +6,34 @@ namespace tictactoe
 {
     class Draw
     {
+        string gameTitle = @"                     d8888 888          888           88888888888                
+                                   d88888 888          888               888                    
+                                  d88P888 888          888               888                    
+                                 d88P 888 888 88888b.  88888b.   8888b.  888   .d88b.   .d88b.  
+                                d88P  888 888 888  88b 888  88b      88b 888  d88''88b d8P  Y8b
+                               d88P   888 888 888  888 888  888 .d888888 888  888  888 88888888 
+                              d8888888888 888 888 d88P 888  888 888  888 888  Y88..88P Y8b
+                             d88P     888 888 88888P   888  888  Y888888 888    Y88P     Y8888  
+                                              888                                               
+                                              888                                               
+                                              888                                               ";
         public void Start()
         {
-            Console.WriteLine("Welcome to AlphaToe, Where you can train a state of the art AI to battle against you in the game of Tic Tac Toe!");
+            string startInfoText = "Välkommen till AlphaToe!";
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (startInfoText.Length / 2)) + "}", startInfoText));
+            Options();
+        }
+        public void Options()
+        {
+            string option1 = "1. Spela mot Människa";
+            string option2 = "2. Spela mot lätt AI";
+            string option3 = "3. Spela mot svår AI";
+            string option4 = "4. Träna en egen AI";
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option1));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option2));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option3));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option4));
+
         }
 
         public void Clear()
@@ -27,7 +52,8 @@ namespace tictactoe
 
         public void EnterEpisodes()
         {
-            Console.Write("Please enter how many rounds of play your agent will train during: ");
+            string text = "Amount of Episodes:";
+            Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", text));
         }
 
         public void PlayerWins(int player)
@@ -67,7 +93,7 @@ namespace tictactoe
         public void Progress(int count, int total)
         {
             SetPosition(45, 11);
-            Console.WriteLine($"Progress: {count} / {total}");
+            Console.WriteLine($"Progress: {count} / {total} Games Played");
 
         }
         public void Wins(int player1Wins, int player2Wins,int drawMatch)
@@ -80,6 +106,21 @@ namespace tictactoe
         {
             Console.Write("Do you want to play as player 1, or player 2?:");
         }
-
+        public void ResetFGColor()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        public void GameTitle()
+        {
+            SetPosition(15, 1);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(gameTitle);
+            ResetFGColor();
+            Divide();
+        }
+        public void Divide()
+        {
+            Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
+        }
     }
 }

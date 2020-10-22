@@ -1,0 +1,63 @@
+{
+  "format": 1,
+  "restore": {
+    "W:\\_repos\\_deep_tic_tac_toe\\tictactoe\\AlphaToe\\tictactoe\\tictactoe.csproj": {}
+  },
+  "projects": {
+    "W:\\_repos\\_deep_tic_tac_toe\\tictactoe\\AlphaToe\\tictactoe\\tictactoe.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "W:\\_repos\\_deep_tic_tac_toe\\tictactoe\\AlphaToe\\tictactoe\\tictactoe.csproj",
+        "projectName": "tictactoe",
+        "projectPath": "W:\\_repos\\_deep_tic_tac_toe\\tictactoe\\AlphaToe\\tictactoe\\tictactoe.csproj",
+        "packagesPath": "C:\\Users\\calle\\.nuget\\packages\\",
+        "outputPath": "W:\\_repos\\_deep_tic_tac_toe\\tictactoe\\AlphaToe\\tictactoe\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\calle\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "dependencies": {
+            "Microsoft.NETCore.App": {
+              "target": "Package",
+              "version": "[2.1.0, )",
+              "autoReferenced": true
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.12.0, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

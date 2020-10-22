@@ -24,17 +24,18 @@ namespace tictactoe
 
 
             draw.Clear();
-            draw.SetPosition(20, 10);
+            draw.TrainingTitle();
             while (counter < episodes)
             {
                 int round = 0;
+                draw.SetPosition(45, 11);
                 draw.Progress(counter, episodes);
                 draw.Wins(player1Wins, player2Wins, drawMatch);
                 while (!gameOver)
                 {
                     if (!gameOver)
                     {
-                        player2.SetStatePrevious(player2.GetStateFromExt(state));
+                        player2.SetStatePrevious(state);
                         if (random.NextDouble() <= EPSILON)
                         {
                             int playerAction = player1.StepForwardEpsilon(state);
@@ -45,7 +46,7 @@ namespace tictactoe
                             int playerAction = player1.StepForward(state);
                             state.Set(playerAction, 1);
                             if(round > 0)
-                                player1.Train(player1.GetStateFromExt(state), ALPHA);
+                                player1.Train(state, ALPHA);
                             
                         }
                         if (rules.CheckGameOver(state))
@@ -63,7 +64,7 @@ namespace tictactoe
 
                     if (!gameOver)
                     {
-                        player1.SetStatePrevious(player1.GetStateFromExt(state));
+                        player1.SetStatePrevious(state);
                         if (random.NextDouble() <= EPSILON)
                         {
                             int playerAction = player2.StepForwardEpsilon(state);
@@ -73,7 +74,7 @@ namespace tictactoe
                         {
                             int playerAction = player2.StepForward(state);
                             state.Set(playerAction, 2);
-                            player2.Train(player2.GetStateFromExt(state), ALPHA);
+                            player2.Train(state, ALPHA);
                         }
                         if (rules.CheckGameOver(state))
                         {

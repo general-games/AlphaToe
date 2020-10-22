@@ -21,10 +21,19 @@ namespace tictactoe
             states = InitStates();
             statePrevious = GetStateFromExt(startState);
         }
+        public Agent(int player)
+        {
+            this.Player = player;
+            random = new Random(42);
+            states = InitStates();
+        }
+
+        //Init functions
         public List<State> InitStates()
         {
             return init.GetValid(Player);
         }
+        //Action functions
         public int StepForwardRnd(State state)
         {
             int randomAction = random.Next(1, 9 + 1);
@@ -60,15 +69,17 @@ namespace tictactoe
             }
             return 0;
         }
+        //Training functions
         public void Train(State statePrime, float ALPHA)
         {
-           statePrevious.SetProb(TemporalDifference(statePrevious, statePrime, ALPHA));
+           statePrevious.SetProb(TemporalDifference(statePrevious, GetStateFromExt(statePrime), ALPHA));
         }
         private float TemporalDifference(State state, State statePrime, float ALPHA)
         {
             float newValue = state.Probability + (ALPHA * (statePrime.Probability - state.Probability));
             return newValue;
         }
+        //Control functions
         private bool IsValidStateTransition(State state, State statePrime)
         {
             int difference = 0;
@@ -144,17 +155,14 @@ namespace tictactoe
         }
         public State GetStateFromExt(State state)
         {
-            foreach (State s in states)
-            {
-                if (state.GetSequence() == s.GetSequence())
-                    return s;
-            }
-            return null;
+            State internalState = states.First(s => s.GetSequence() == state.GetSequence());
+            return internalState;
         }
         public void SetStatePrevious(State state)
         {
             statePrevious = GetStateFromExt(state);
         }
+        //Debug functions:
         public void DrawPrevious()
         {
             Console.WriteLine(statePrevious.GetSequence());

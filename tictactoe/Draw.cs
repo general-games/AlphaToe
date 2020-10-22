@@ -17,6 +17,15 @@ namespace tictactoe
                                               888                                               
                                               888                                               
                                               888                                               ";
+
+        string trainingTitle = @"         88888888888 8888888b.         d8888 8888888 888b    888 8888888 888b    888  .d8888b.  
+                     888     888   Y88b       d88888   888   8888b   888   888   8888b   888 d88P  Y88b 
+                     888     888    888      d88P888   888   88888b  888   888   88888b  888 888    888 
+                     888     888   d88P     d88P 888   888   888Y88b 888   888   888Y88b 888 888        
+                     888     8888888P      d88P  888   888   888 Y88b888   888   888 Y88b888 888  88888 
+                     888     888 T88b     d88P   888   888   888  Y88888   888   888  Y88888 888    888 
+                     888     888  T88b   d8888888888   888   888   Y8888   888   888   Y8888 Y88b  d88P 
+                     888     888   T88b d88P     888 8888888 888    Y888 8888888 888    Y888   Y8888P88 ";
         public void Start()
         {
             string startInfoText = "Välkommen till AlphaToe!";
@@ -25,14 +34,17 @@ namespace tictactoe
         }
         public void Options()
         {
-            string option1 = "1. Spela mot Människa";
-            string option2 = "2. Spela mot lätt AI";
-            string option3 = "3. Spela mot svår AI";
-            string option4 = "4. Träna en egen AI";
+            string option1 = "1. Play two Person Game";
+            string option2 = "2. Play Easy AI";
+            string option3 = "3. Play Hard AI";
+            string option4 = "4. Train AI";
+            string option5 = "5. Play your AI";
             Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option1));
             Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option2));
             Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option3));
             Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option4));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option5));
+
 
         }
 
@@ -71,12 +83,13 @@ namespace tictactoe
                 Console.WriteLine("Player Two Has Won!");
                 Console.ForegroundColor = ConsoleColor.White;
             }
-
+            Console.ReadLine();
         }
 
         public void MatchDraw()
         {
             Console.WriteLine("It's a Draw!");
+            Console.ReadLine();
         }
         public void NotValidInput()
         {
@@ -92,13 +105,11 @@ namespace tictactoe
         }
         public void Progress(int count, int total)
         {
-            SetPosition(45, 11);
             Console.WriteLine($"Progress: {count} / {total} Games Played");
-
         }
         public void Wins(int player1Wins, int player2Wins,int drawMatch)
         {
-            SetPosition(30, 12);
+            SetPosition(35, 12);
             Console.WriteLine($"Player 1 Wins:{player1Wins}  Draw Games:{drawMatch}  Player 2 Wins:{player2Wins}");
         }
 
@@ -118,6 +129,20 @@ namespace tictactoe
             ResetFGColor();
             Divide();
         }
+        public void TrainingTitle()
+        {
+            SetPosition(8, 1);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(trainingTitle);
+            ResetFGColor();
+            Divide();
+        }
+        public void NoTrainedAgents()
+        {
+            string text = "No Trained Agents. Press enter to continue";
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", text));
+        }
+
         public void Divide()
         {
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");

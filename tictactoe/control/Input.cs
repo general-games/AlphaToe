@@ -39,9 +39,11 @@ namespace tictactoe
         public bool IsValidAction(string input,State state, out int action)
         {
             bool isValid = int.TryParse(input, out action);
+
             if (isValid)
-                if (state.Sequence[action - 1] == 0)
-                    return true;
+                if(action > 0 && action <= 9)
+                    if (state.Sequence[action - 1] == 0)
+                        return true;
             return false;
         }
     }

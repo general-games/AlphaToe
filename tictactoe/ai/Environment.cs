@@ -31,7 +31,7 @@ namespace tictactoe
             while (counter < episodes)
             {
                 int round = 0;
-                draw.SetPosition(45, 11);
+                draw.SetPosition(0, 11);
                 draw.Progress(counter, episodes);
                 draw.Wins(player1Wins, player2Wins, drawMatch);
                 string[] gameSequence = new string[9];

@@ -15,6 +15,12 @@ namespace tictactoe
             TrainAi,
             PlayAi
         }
+        enum Players
+        {
+            Blank,
+            Player1,
+            Player2
+        }
 
         public void Run()
         {
@@ -73,11 +79,13 @@ namespace tictactoe
             while (true)
             {
                 State state = new State(new int[9]);
-                draw.Board(state);
                 while (true && !gameOver)
                 {
                     while (true && !gameOver)
                     {
+
+                        DrawBase(draw, state);
+                        draw.EnterAction((int)Players.Player1);
                         bool isValidAction = input.IsValidAction(Console.ReadLine(), state, out int playerAction);
                         if (isValidAction)
                         {
@@ -99,6 +107,8 @@ namespace tictactoe
                     }
                     while (true && !gameOver)
                     {
+                        DrawBase(draw, state);
+                        draw.EnterAction((int)Players.Player2);
                         bool isValidAction = input.IsValidAction(Console.ReadLine(), state, out int playerAction);
                         if (isValidAction)
                         {
@@ -118,7 +128,6 @@ namespace tictactoe
                             break;
                         }
                     }
-
                 }
                 break;
             }
@@ -133,7 +142,6 @@ namespace tictactoe
                 State state = new State();
                 draw.Clear();
                 draw.GameTitle();
-                draw.Board(state);
                 if (chosenPlayer == 1)
                 {
                     Agent player2 = agents[1];
@@ -143,7 +151,8 @@ namespace tictactoe
                         {
                             while (true && !gameOver)
                             {
-                                draw.YourAction();
+                                draw.Board(state);
+                                draw.EnterAction();
                                 bool isValidMove = int.TryParse(Console.ReadLine(), out int playerAction);
                                 if (isValidMove)
                                 {
@@ -184,7 +193,6 @@ namespace tictactoe
                                         gameOver = true;
                                     }
                             }
-
                         }
                         break;
                     }
@@ -215,7 +223,7 @@ namespace tictactoe
                             }
                             while (true && !gameOver)
                             {
-                                draw.YourAction();
+                                draw.EnterAction();
                                 bool isValidMove = input.IsValidAction(Console.ReadLine(), state, out int playerAction);
                                 if (isValidMove)
                                 {
@@ -261,13 +269,15 @@ namespace tictactoe
                         Agent easyAgent = new Agent(2);
                         while (true && !gameOver)
                         {
-                            draw.GameState(state);
+                            DrawBase(draw, state);
                             while (true && !gameOver)
                             {
+                                draw.EnterAction();
                                 bool isValidAction = input.IsValidAction(Console.ReadLine(), state, out int playerAction);
                                 if (isValidAction)
                                 {
                                     state.Set(playerAction, 1);
+                                    draw.Board(state);
                                     if (rules.CheckGameOver(state))
                                         if (rules.CheckWinner(state, 1))
                                         {
@@ -286,6 +296,7 @@ namespace tictactoe
                             {
                                 int player2Action = easyAgent.StepForwardRnd(state);
                                 state.Set(player2Action, 2);
+                                draw.Board(state);
                                 if (rules.CheckGameOver(state))
                                     if (rules.CheckWinner(state, 2))
                                     {
@@ -308,10 +319,12 @@ namespace tictactoe
                         Agent easyAgent = new Agent(1);
                         while (true && !gameOver)
                         {
+                            DrawBase(draw, state);
                             if (!gameOver)
                             {
                                 int player2Action = easyAgent.StepForwardRnd(state);
                                 state.Set(player2Action, 1);
+                                draw.Board(state);
                                 if (rules.CheckGameOver(state))
                                     if (rules.CheckWinner(state, 1))
                                     {
@@ -323,14 +336,16 @@ namespace tictactoe
                                         draw.MatchDraw();
                                         gameOver = true;
                                     }
+
                             }
-                            draw.GameState(state);
                             while (true && !gameOver)
                             {
+                                draw.EnterAction();
                                 bool isValidMove = input.IsValidAction(Console.ReadLine(), state, out int playerAction);
                                 if (isValidMove)
                                 {
                                     state.Set(playerAction, 2);
+                                    draw.Board(state);
                                     if (rules.CheckGameOver(state))
                                         if (rules.CheckWinner(state, 2))
                                         {
@@ -358,6 +373,12 @@ namespace tictactoe
             Environment environment = new Environment();
             Agent[] agents = environment.Train(episodes);
             return agents;
+        }
+        public void DrawBase(Draw draw, State state)
+        {
+            draw.Clear();
+            draw.GameTitle();
+            draw.Board(state);
         }
     }
 }

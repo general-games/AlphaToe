@@ -41,20 +41,18 @@ namespace tictactoe
             string option3 = "3. Play Hard AI";
             string option4 = "4. Train AI";
             string option5 = "5. Play your AI";
-            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option1));
-            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option2));
-            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option3));
-            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option4));
-            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", option5));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (option1.Length / 2)) + "}", option1));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (option2.Length / 2)) + "}", option2));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (option3.Length / 2)) + "}", option3));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (option4.Length / 2)) + "}", option4));
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (option5.Length / 2)) + "}", option5));
 
 
         }
-
         public void Clear()
         {
             Console.Clear();
         }
-
         public void GameState(State state)
         {
             for (int i = 0; i < state.Sequence.Length; i++)
@@ -98,7 +96,13 @@ namespace tictactoe
         }
         public void EnterAction()
         {
-            Console.Write("Enter Action: ");
+            string text = "Enter Move:";
+            Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
+        }
+        public void EnterAction(int player)
+        {
+            string text = $"Enter Move Player{player}: ";
+            Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
         }
         public string Translate(int action)
         {
@@ -115,7 +119,6 @@ namespace tictactoe
             string text = "Amount of Episodes:";
             Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + 10) + "}", text));
         }
-
         public void PlayerWins(int player)
         {
             if (player == 1)
@@ -135,7 +138,6 @@ namespace tictactoe
             }
             Console.ReadLine();
         }
-
         public void MatchDraw()
         {
             Console.WriteLine("It's a Draw!");
@@ -156,21 +158,19 @@ namespace tictactoe
         }
         public void Progress(int count, int total)
         {
-            Console.WriteLine($"Progress: {count} / {total} Games Played");
+            string text = $"Progress: {count} / {total} Games Played";
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length/2)) + "}", text));
+
         }
         public void Wins(int player1Wins, int player2Wins,int drawMatch)
         {
-            SetPosition(35, 12);
-            Console.WriteLine($"Player 1 Wins:{player1Wins}  Draw Games:{drawMatch}  Player 2 Wins:{player2Wins}");
+            string text = $"Player 1 Wins:{player1Wins}  Draw Games:{drawMatch}  Player 2 Wins:{player2Wins}";
+            Console.WriteLine(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length/2)) + "}", text));
+
         }
         public void ChooseOpponent()
         {
             string text = "Play as 1 or 2:";
-            Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
-        }
-        public void YourAction()
-        {
-            string text = "Enter Move:";
             Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
         }
         public void ResetFGColor()

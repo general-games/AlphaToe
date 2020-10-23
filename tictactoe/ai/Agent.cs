@@ -28,10 +28,14 @@ namespace tictactoe
             states = InitStates();
         }
 
-        //Init functions
+        //Meta functions
         public List<State> InitStates()
         {
             return init.GetValid(Player);
+        }
+        public List<State> GetPolicy()
+        {
+            return states;
         }
         //Action functions
         public int StepForwardRnd(State state)

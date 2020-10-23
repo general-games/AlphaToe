@@ -14,7 +14,10 @@ namespace tictactoe
         {
             this.Sequence = sequence;
         }
-
+        public State()
+        {
+            this.Sequence = new int[9];
+        }
         public int[] Get()
         {
             return Sequence;
@@ -27,10 +30,10 @@ namespace tictactoe
         {
             this.Probability = prob;
         }
-        public void Set(int move, int player)
+        public void Set(int action, int player)
         {
-            if(CanSet(move))
-              Sequence[move-1] = player;
+            if(CanSet(action))
+              Sequence[action - 1] = player;
         }
         public bool CanSet(int move)
         {

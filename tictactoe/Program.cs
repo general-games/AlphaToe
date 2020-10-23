@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using tictactoe.control;
 
 namespace tictactoe
 {
@@ -10,6 +11,7 @@ namespace tictactoe
         {
             Game game = new Game();
             game.Run();
+
         }
     }
 }

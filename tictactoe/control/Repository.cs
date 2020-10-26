@@ -37,10 +37,15 @@ namespace tictactoe.control
         {
             string dataPath = path.NowFolder();
             Directory.CreateDirectory(dataPath);
-            string velPath = path.NowVelocity(dataPath);
+            string winsPath = path.NowWins(dataPath);
+            string drawsPath = path.NowDraws(dataPath);
+            string velPath1 = path.NowVelocity(dataPath, 1);
+            string velPath2 = path.NowVelocity(dataPath, 2);
             string seqPath = path.NowSequence(dataPath);
+            string openingPath = path.NowOpening(dataPath);
             string policyPath1 = path.NowPolicy(dataPath, 1);
             string policyPath2 = path.NowPolicy(dataPath, 2);
+            string metaPath = path.NowMeta(dataPath); 
             using (StreamWriter sw = new StreamWriter(seqPath, false))
             {
                 foreach(string[] array in data.Sequences)
@@ -52,9 +57,9 @@ namespace tictactoe.control
                     sw.Write("\n");
                 }
             }
-            using (StreamWriter sw = new StreamWriter(velPath, false))
+            using (StreamWriter sw = new StreamWriter(winsPath, false))
             {
-                foreach(int i in data.Velocity)
+                foreach(int i in data.Wins)
                 {
                     sw.Write(i + ",");
                 }
@@ -63,14 +68,77 @@ namespace tictactoe.control
             {
                 foreach(State s in data.PolicyPlayer1)
                 {
-                    sw.Write(s.GetSequence() + "|" + s.Probability + ",");
+                    sw.Write(s.GetSequence() + "|" + s.Probability + "¤");
                 }
             }
             using (StreamWriter sw = new StreamWriter(policyPath2, false))
             {
-                foreach (State s in data.PolicyPlayer1)
+                foreach (State s in data.PolicyPlayer2)
                 {
-                    sw.Write(s.GetSequence() + "|" + s.Probability + ",");
+                    sw.Write(s.GetSequence() + "|" + s.Probability + "¤");
+                }
+            }
+            using (StreamWriter sw = new StreamWriter(metaPath, false))
+            {
+                sw.Write($"Date:{DateTime.Now} TrainTime: {data.TrainTime} , ALPHA: {data.ALPHA} , EPSILON: {data.EPSILON} , Episodes: {data.Episodes} P1 Init State Values:" +
+                    $" {data.P1StateValues[0]} , {data.P1StateValues[1]} , {data.P1StateValues[2]} P2 Init State Values: {data.P2StateValues[0]} , {data.P2StateValues[1]} , {data.P2StateValues[2]} ");
+            }
+            using (StreamWriter sw = new StreamWriter(velPath1, false))
+            {
+                int p1wins = 0;
+                int counter = 0;
+                foreach(int i in data.Wins)
+                {
+                    if (i == 1)
+                        p1wins++;
+                    counter++;
+                    if(counter == 10)
+                    {
+                        sw.Write(p1wins + ",");
+                        counter = 0;
+                        p1wins = 0;
+                    }
+                }
+            }
+            using (StreamWriter sw = new StreamWriter(velPath2, false))
+            {
+                int p2Wins = 0;
+                int counter = 0;
+                foreach (int i in data.Wins)
+                {
+                    if (i == 2)
+                        p2Wins++;
+                    counter++;
+                    if (counter == 10)
+                    {
+                        sw.Write(p2Wins + ",");
+                        counter = 0;
+                        p2Wins = 0;
+                    }
+                }
+            }
+            using (StreamWriter sw = new StreamWriter(drawsPath, false))
+            {
+                int draws = 0;
+                int counter = 0;
+                foreach (int i in data.Wins)
+                {
+                    if (i == 0)
+                        draws++;
+                    counter++;
+                    if (counter == 10)
+                    {
+                        sw.Write(draws + ",");
+                        counter = 0;
+                        draws = 0;
+                    }
+                }
+            }
+            using (StreamWriter sw = new StreamWriter(openingPath, false))
+            {
+                foreach(int i in data.Opening)
+                {
+                    sw.Write(i + ",");
                 }
             }
         }

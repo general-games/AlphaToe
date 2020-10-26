@@ -1,24 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using tictactoe.control;
 
 namespace tictactoe
 {
     class Environment
     {
-        float ALPHA = 0.1f;
-        double EPSILON = 0.1;
+        private float ALPHA = 0.05f;
+        private double EPSILON = 0.05f;
+        private float WINVAL1 = 1.0f;
+        private float LOSEVAL1 = -1.0f;
+        private float DRAWVAL1 = 0.0f;
+
+        private float WINVAL2 = 1.0f;
+        private float LOSEVAL2 = -1.0f;
+        private float DRAWVAL2 = 0.0f;
+
+        private Random random;
+        public Environment(Random random)
+        {
+            this.random = random;
+        }
         public Agent[] Train(int episodes)
         {
-            Random random = new Random(42);
+            Stopwatch stopwatch = new Stopwatch();
             Repository repo = new Repository();
             State state = new State(new int[9]);
             Rules rules = new Rules();
-            Agent player1 = new Agent(1, state);
-            Agent player2 = new Agent(2, state);
+            Agent player1 = new Agent(1, state,random, WINVAL1, LOSEVAL1, DRAWVAL1);
+            Agent player2 = new Agent(2, state,random, WINVAL2, LOSEVAL2, DRAWVAL2);
             Draw draw = new Draw();
-            Data data = new Data();
+            Data data = new Data(ALPHA, EPSILON, episodes, new float[] {WINVAL1, LOSEVAL1, DRAWVAL1},new float[] { WINVAL2, LOSEVAL2, DRAWVAL2});
 
             bool gameOver = false;
             int counter = 0;
@@ -28,6 +42,7 @@ namespace tictactoe
 
             draw.Clear();
             draw.TrainingTitle();
+            stopwatch.Start();
             while (counter < episodes)
             {
                 int round = 0;
@@ -49,7 +64,9 @@ namespace tictactoe
                         {
                             int playerAction = player1.StepForward(state);
                             state.Set(playerAction, 1);
-                            if(round > 0)
+                            if (round == 0)
+                                data.AddOpening(playerAction);
+                            if (round > 0)
                                 player1.Train(state, ALPHA);
                             
                         }
@@ -57,13 +74,14 @@ namespace tictactoe
                             if (rules.CheckWinner(state, 1))
                             {
                                 player1Wins++;
-                                data.RecordVelocity(1);
+                                player2.TrainEnd(ALPHA, LOSEVAL2);
+                                data.RecordWins(player1.Player);
                                 gameOver = true;
                             }
                             else
                             {
                                 drawMatch++;
-                                data.RecordVelocity(0);
+                                data.RecordWins(0);
                                 gameOver = true;
                             }
                         gameSequence[round] = state.GetSequence();
@@ -88,13 +106,14 @@ namespace tictactoe
                             if (rules.CheckWinner(state, player2.Player))
                             {
                                 player2Wins++;
-                                data.RecordVelocity(2);
+                                player1.TrainEnd(ALPHA, LOSEVAL2);
+                                data.RecordWins(player2.Player);
                                 gameOver = true;
                             }
                             else
                             {
                                 drawMatch++;
-                                data.RecordVelocity(0);
+                                data.RecordWins(0);
                                 gameOver = true;
                             }
                         }
@@ -105,12 +124,15 @@ namespace tictactoe
 
                 if (gameOver)
                 {
+
                     data.RecordSequence(gameSequence);
                     state = new State(new int[9]);
                     counter++;
                     gameOver = !gameOver;
                 }
             }
+            stopwatch.Stop();
+            data.SetTrainTime(stopwatch.Elapsed);
             data.RecordPlayerPolicy(player1);
             data.RecordPlayerPolicy(player2);
             repo.Write(data);

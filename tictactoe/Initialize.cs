@@ -52,7 +52,7 @@ namespace tictactoe
             }
             return allStates;
         }
-        public List<State> GetValid(int player)
+        public List<State> GetValid(int player, float winVal, float loseVal, float drawVal)
         {
             Assert.IsTrue(IsValidPlayer(player));
 
@@ -88,53 +88,137 @@ namespace tictactoe
                     validStates.RemoveAt(i);
             }
 
+            SetBoardProbabilities(player, validStates, winVal, loseVal, drawVal);
+
+            return validStates;
+        }
+        public List<State> GetValid(int player)
+        {
+            Assert.IsTrue(IsValidPlayer(player));
+
+            int[,] allStates = EnumerateAll();
+            List<State> validStates = new List<State>();
+
+            for (int i = 0; i < allStates.GetLength(0); i++)
+            {
+                int zero = 0;
+                int one = 0;
+                int two = 0;
+                int[] sequence = new int[9];
+
+                for (int j = 0; j < allStates.GetLength(1); j++)
+                {
+                    if (allStates[i, j] == 0)
+                        zero += 1;
+                    if (allStates[i, j] == 1)
+                        one += 1;
+                    if (allStates[i, j] == 2)
+                        two += 1;
+                    sequence[j] = allStates[i, j];
+                }
+                if (one <= 5 && two <= 4 && one >= two && !(one - two >= 2))
+                {
+                    State state = new State(sequence);
+                    validStates.Add(state);
+                }
+            }
+            for (int i = validStates.Count - 1; i > -1; i--)
+            {
+                if (rules.CheckWinner(validStates[i], 1) && rules.CheckWinner(validStates[i], 2))
+                    validStates.RemoveAt(i);
+            }
+
             SetBoardProbabilities(player, validStates);
 
             return validStates;
         }
-        private void SetBoardProbabilities(int player, List<State> boards)
+        private void SetBoardProbabilities(int player, List<State> states, float winVal, float loseVal, float drawVal)
         {
             if (player == 1)
             {
-                for (int i = 0; i < boards.Count; i++)
+                for (int i = 0; i < states.Count; i++)
                 {
-                    if (rules.CheckGameOver(boards[i]))
+                    if (rules.CheckGameOver(states[i]))
                     {
-                        if (rules.CheckWinner(boards[i], 2))
-                            boards[i].SetProb(0.0f);
-                        else if (rules.CheckWinner(boards[i], 1))
-                            boards[i].SetProb(1.0f);
-                        else if (rules.CheckFull(boards[i]))
-                            boards[i].SetProb(0.0f);
+                        if (rules.CheckWinner(states[i], 2))
+                            states[i].SetProb(loseVal);
+                        else if (rules.CheckWinner(states[i], 1))
+                            states[i].SetProb(winVal);
+                        else if (rules.CheckFull(states[i]))
+                            states[i].SetProb(drawVal);
                     }
                     else
                     {
-                        boards[i].SetProb(0.5f);
+                        states[i].SetProb(0.5f);
                     }
 
                 }
             }
             else if (player == 2)
             {
-                for (int i = 0; i < boards.Count; i++)
+                for (int i = 0; i < states.Count; i++)
                 {
-                    if (rules.CheckGameOver(boards[i]))
+                    if (rules.CheckGameOver(states[i]))
                     {
-                        if (rules.CheckWinner(boards[i], 1))
-                            boards[i].SetProb(0.0f);
-                        else if (rules.CheckWinner(boards[i], 2))
-                            boards[i].SetProb(1.0f);
-                        else if (rules.CheckFull(boards[i]))
-                            boards[i].SetProb(0.0f);
+                        if (rules.CheckWinner(states[i], 1))
+                            states[i].SetProb(loseVal);
+                        else if (rules.CheckWinner(states[i], 2))
+                            states[i].SetProb(winVal);
+                        else if (rules.CheckFull(states[i]))
+                            states[i].SetProb(drawVal);
                     }
                     else
                     {
-                        boards[i].SetProb(0.5f);
+                        states[i].SetProb(0.5f);
                     }
 
                 }
             }
         }
+        private void SetBoardProbabilities(int player, List<State> states)
+        {
+            if (player == 1)
+            {
+                for (int i = 0; i < states.Count; i++)
+                {
+                    if (rules.CheckGameOver(states[i]))
+                    {
+                        if (rules.CheckWinner(states[i], 2))
+                            states[i].SetProb(0.0f);
+                        else if (rules.CheckWinner(states[i], 1))
+                            states[i].SetProb(1.0f);
+                        else if (rules.CheckFull(states[i]))
+                            states[i].SetProb(0.0f);
+                    }
+                    else
+                    {
+                        states[i].SetProb(0.5f);
+                    }
+
+                }
+            }
+            else if (player == 2)
+            {
+                for (int i = 0; i < states.Count; i++)
+                {
+                    if (rules.CheckGameOver(states[i]))
+                    {
+                        if (rules.CheckWinner(states[i], 1))
+                            states[i].SetProb(0.0f);
+                        else if (rules.CheckWinner(states[i], 2))
+                            states[i].SetProb(1.0f);
+                        else if (rules.CheckFull(states[i]))
+                            states[i].SetProb(0.0f);
+                    }
+                    else
+                    {
+                        states[i].SetProb(0.5f);
+                    }
+
+                }
+            }
+        }
+
         private bool IsValidPlayer(int player)
         {
             if (player == 1 || player == 2)

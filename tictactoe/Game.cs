@@ -21,10 +21,14 @@ namespace tictactoe
             Player1,
             Player2
         }
-
+        Random random;
+        public Game()
+        {
+            this.random = new Random(42);
+        }
         public void Run()
         {
-            Environment environment = new Environment();
+            Environment environment = new Environment(random);
             Rules rules = new Rules();
             Draw draw = new Draw();
             Input input = new Input();
@@ -55,7 +59,7 @@ namespace tictactoe
                             draw.EnterEpisodes();
                             bool isValid = input.IsValidNumber(Console.ReadLine(), out int episodes);
                             if (isValid)
-                                lastAgents = TrainAgents(episodes);
+                                lastAgents = TrainAgents(episodes, random);
                             break;
                         case (int)GameOptions.PlayAi:
                             if (input.IsTrained(lastAgents))
@@ -266,7 +270,7 @@ namespace tictactoe
                     if (chosenPlayer == 1)
                     {
                         State state = new State(new int[9]);
-                        Agent easyAgent = new Agent(2);
+                        Agent easyAgent = new Agent(2, random);
                         while (true && !gameOver)
                         {
                             DrawBase(draw, state);
@@ -316,7 +320,7 @@ namespace tictactoe
                     else if (chosenPlayer == 2)
                     {
                         State state = new State(new int[9]);
-                        Agent easyAgent = new Agent(1);
+                        Agent easyAgent = new Agent(1, random);
                         while (true && !gameOver)
                         {
                             DrawBase(draw, state);
@@ -368,9 +372,9 @@ namespace tictactoe
             }
 
         }
-        private Agent[] TrainAgents(int episodes)
+        private Agent[] TrainAgents(int episodes, Random random)
         {
-            Environment environment = new Environment();
+            Environment environment = new Environment(random);
             Agent[] agents = environment.Train(episodes);
             return agents;
         }

@@ -8,30 +8,40 @@ namespace tictactoe
     class Agent
     {
         public int Player { get; set; }
+        public float WinVal { get;private set; }
+        public float LoseVal { get;private set; }
+        public float DrawVal { get;private set; }
 
         private Initialize init = new Initialize();
         private List<State> states;
         private State statePrevious;
         Random random;
 
-        public Agent(int player, State startState)
+        public Agent(int player, State startState, Random random, float winValue, float loseValue, float drawVal)
         {
             this.Player = player;
-            random = new Random(42);
-            states = InitStates();
+            this.random = random;
+            this.WinVal = winValue;
+            this.LoseVal = loseValue;
+            this.DrawVal = drawVal;
+            states = InitStates(player, winValue, loseValue, drawVal);
             statePrevious = GetStateFromExt(startState);
         }
-        public Agent(int player)
+        public Agent(int player, Random random)
         {
             this.Player = player;
-            random = new Random(42);
-            states = InitStates();
+            this.random = random;
+            states = InitStates(player);
         }
 
         //Meta functions
-        public List<State> InitStates()
+        public List<State> InitStates(int player ,float winVal, float loseVal, float drawVal)
         {
-            return init.GetValid(Player);
+            return init.GetValid(player, winVal, loseVal, drawVal);
+        }
+        public List<State> InitStates(int player)
+        {
+            return init.GetValid(player);
         }
         public List<State> GetPolicy()
         {
@@ -78,9 +88,18 @@ namespace tictactoe
         {
            statePrevious.SetProb(TemporalDifference(statePrevious, GetStateFromExt(statePrime), ALPHA));
         }
+        public void TrainEnd(float ALPHA, float loseVal)
+        {
+            statePrevious.SetProb(TemporalDiffernceEnd(statePrevious, ALPHA, loseVal));
+        }
         private float TemporalDifference(State state, State statePrime, float ALPHA)
         {
             float newValue = state.Probability + (ALPHA * (statePrime.Probability - state.Probability));
+            return newValue;
+        }
+        private float TemporalDiffernceEnd(State state, float ALPHA, float loseVal)
+        {
+            float newValue = state.Probability + (ALPHA * (loseVal - state.Probability));
             return newValue;
         }
         //Control functions
@@ -188,6 +207,12 @@ namespace tictactoe
             {
                 Console.WriteLine(s.Probability);
             }
+        }
+
+        public void DrawProbsExt(State state)
+        {
+            State myState = GetStateFromExt(state);
+            Console.WriteLine($"Prob: {myState.Probability}");
         }
     }
 }

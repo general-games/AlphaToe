@@ -202,7 +202,6 @@ namespace tictactoe
         {
             Console.WriteLine("------------------------------------------------------------------------------------------------------------------------");
         }
-
         public void NotImplemented()
         {
             Console.WriteLine("Feature not yet implemented! Press return to continue");

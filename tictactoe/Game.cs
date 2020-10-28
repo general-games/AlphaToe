@@ -28,7 +28,6 @@ namespace tictactoe
         }
         public void Run()
         {
-            Environment environment = new Environment(random);
             Rules rules = new Rules();
             Draw draw = new Draw();
             Input input = new Input();

@@ -17,8 +17,8 @@ namespace tictactoe.control
         public float ALPHA { get; private set; }
         public double EPSILON { get; private set; }
         public int Episodes { get; private set; }
-        public float[] P1StateValues { get; set; }
-        public float[] P2StateValues { get; set; }
+        public float[] P1Policy { get; set; }
+        public float[] P2Policy { get; set; }
         public int P1Wins { get; private set; }
         public int P2Wins { get; private set; }
         public int Draws { get; set; }
@@ -38,8 +38,8 @@ namespace tictactoe.control
             this.ALPHA = alpha;
             this.EPSILON = epsilon;
             this.Episodes = episodes;
-            this.P1StateValues = p1Vals;
-            this.P2StateValues = p2Vals;
+            this.P1Policy = p1Vals;
+            this.P2Policy = p2Vals;
         }
         public void RecordWin(int player)
         {

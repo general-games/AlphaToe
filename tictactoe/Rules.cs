@@ -14,7 +14,6 @@ namespace tictactoe
                 return true;
             return false;
         }
-
         public bool CheckWinner(State board, int playerToCheck)
         {
             if (CheckColumns(board, playerToCheck))
@@ -25,7 +24,6 @@ namespace tictactoe
                 return true;
             return false;
         }
-
         public bool CheckColumns(State board, int playerToCheck)
         {
             int checker = (1 - 1);
@@ -45,7 +43,6 @@ namespace tictactoe
             }
             return false;
         }
-
         public bool CheckRows(State board, int playerToCheck)
         {
             int checker = (1 - 1) * 3;
@@ -65,7 +62,6 @@ namespace tictactoe
             }
             return false;
         }
-
         public bool CheckDiagonal(State board, int playerToCheck)
         {
             int checker = 0;
@@ -81,7 +77,6 @@ namespace tictactoe
             }
             return false;
         }
-
         public bool CheckFull(State board)
         {
             for (int i = 0; i < board.Sequence.Length; i++)

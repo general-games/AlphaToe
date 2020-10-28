@@ -8,7 +8,7 @@ namespace tictactoe
     {
         public int MoveNum { get { return GetMoveNum(); } }
         public int[] Sequence { get; private set; }
-        public float Probability { get; private set; }
+        public float Value { get; private set; }
 
         public State(int[] sequence)
         {
@@ -26,9 +26,9 @@ namespace tictactoe
         {
             return Sequence[pos];
         }
-        public void SetProb(float prob)
+        public void SetValue(float value)
         {
-            this.Probability = prob;
+            this.Value = value;
         }
         public void Set(int action, int player)
         {

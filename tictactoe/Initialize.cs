@@ -52,7 +52,7 @@ namespace tictactoe
             }
             return allStates;
         }
-        public List<State> GetValid(int player, float winVal, float loseVal, float drawVal)
+        public List<State> GetValid(int player, float reward, float penalty, float drawVal)
         {
             Assert.IsTrue(IsValidPlayer(player));
 
@@ -88,7 +88,7 @@ namespace tictactoe
                     validStates.RemoveAt(i);
             }
 
-            SetBoardProbabilities(player, validStates, winVal, loseVal, drawVal);
+            SetBoardProbabilities(player, validStates, reward, penalty, drawVal);
 
             return validStates;
         }
@@ -132,7 +132,50 @@ namespace tictactoe
 
             return validStates;
         }
-        private void SetBoardProbabilities(int player, List<State> states, float winVal, float loseVal, float drawVal)
+        public List<State> GetValid()
+        {
+            int[,] allStates = EnumerateAll();
+            List<State> validStates = new List<State>();
+            for (int i = 0; i < allStates.GetLength(0); i++)
+            {
+                int zero = 0;
+                int one = 0;
+                int two = 0;
+                int[] sequence = new int[9];
+
+                for (int j = 0; j < allStates.GetLength(1); j++)
+                {
+                    if (allStates[i, j] == 0)
+                        zero += 1;
+                    if (allStates[i, j] == 1)
+                        one += 1;
+                    if (allStates[i, j] == 2)
+                        two += 1;
+                    sequence[j] = allStates[i, j];
+                }
+                if (one <= 5 && two <= 4 && one >= two && !(one - two >= 2))
+                {
+                    State state = new State(sequence);
+                    validStates.Add(state);
+                }
+            }
+            for (int i = validStates.Count - 1; i > -1; i--)
+            {
+                if (rules.CheckWinner(validStates[i], 1) && rules.CheckWinner(validStates[i], 2))
+                    validStates.RemoveAt(i);
+            }
+
+            SetBoardProbabilitiesUniform(validStates, 0.5f);
+            return validStates;
+        }
+        private void SetBoardProbabilitiesUniform(List<State> states, float stateValue)
+        {
+            foreach(State s in states)
+            {
+                s.SetValue(stateValue);
+            }
+        }
+        private void SetBoardProbabilities(int player, List<State> states, float reward, float penalty, float drawVal)
         {
             if (player == 1)
             {
@@ -141,15 +184,15 @@ namespace tictactoe
                     if (rules.CheckGameOver(states[i]))
                     {
                         if (rules.CheckWinner(states[i], 2))
-                            states[i].SetProb(loseVal);
+                            states[i].SetValue(penalty);
                         else if (rules.CheckWinner(states[i], 1))
-                            states[i].SetProb(winVal);
+                            states[i].SetValue(reward);
                         else if (rules.CheckFull(states[i]))
-                            states[i].SetProb(drawVal);
+                            states[i].SetValue(drawVal);
                     }
                     else
                     {
-                        states[i].SetProb(0.5f);
+                        states[i].SetValue(0.5f);
                     }
 
                 }
@@ -161,15 +204,15 @@ namespace tictactoe
                     if (rules.CheckGameOver(states[i]))
                     {
                         if (rules.CheckWinner(states[i], 1))
-                            states[i].SetProb(loseVal);
+                            states[i].SetValue(penalty);
                         else if (rules.CheckWinner(states[i], 2))
-                            states[i].SetProb(winVal);
+                            states[i].SetValue(reward);
                         else if (rules.CheckFull(states[i]))
-                            states[i].SetProb(drawVal);
+                            states[i].SetValue(drawVal);
                     }
                     else
                     {
-                        states[i].SetProb(0.5f);
+                        states[i].SetValue(0.5f);
                     }
 
                 }
@@ -184,15 +227,15 @@ namespace tictactoe
                     if (rules.CheckGameOver(states[i]))
                     {
                         if (rules.CheckWinner(states[i], 2))
-                            states[i].SetProb(0.0f);
+                            states[i].SetValue(0.0f);
                         else if (rules.CheckWinner(states[i], 1))
-                            states[i].SetProb(1.0f);
+                            states[i].SetValue(1.0f);
                         else if (rules.CheckFull(states[i]))
-                            states[i].SetProb(0.0f);
+                            states[i].SetValue(0.0f);
                     }
                     else
                     {
-                        states[i].SetProb(0.5f);
+                        states[i].SetValue(0.5f);
                     }
 
                 }
@@ -204,21 +247,20 @@ namespace tictactoe
                     if (rules.CheckGameOver(states[i]))
                     {
                         if (rules.CheckWinner(states[i], 1))
-                            states[i].SetProb(0.0f);
+                            states[i].SetValue(0.0f);
                         else if (rules.CheckWinner(states[i], 2))
-                            states[i].SetProb(1.0f);
+                            states[i].SetValue(1.0f);
                         else if (rules.CheckFull(states[i]))
-                            states[i].SetProb(0.0f);
+                            states[i].SetValue(0.0f);
                     }
                     else
                     {
-                        states[i].SetProb(0.5f);
+                        states[i].SetValue(0.5f);
                     }
 
                 }
             }
         }
-
         private bool IsValidPlayer(int player)
         {
             if (player == 1 || player == 2)

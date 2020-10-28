@@ -68,20 +68,20 @@ namespace tictactoe.control
             {
                 foreach(State s in data.PolicyPlayer1)
                 {
-                    sw.Write(s.GetSequence() + "|" + s.Probability + "¤");
+                    sw.Write(s.GetSequence() + "|" + s.Value + "¤");
                 }
             }
             using (StreamWriter sw = new StreamWriter(policyPath2, false))
             {
                 foreach (State s in data.PolicyPlayer2)
                 {
-                    sw.Write(s.GetSequence() + "|" + s.Probability + "¤");
+                    sw.Write(s.GetSequence() + "|" + s.Value + "¤");
                 }
             }
             using (StreamWriter sw = new StreamWriter(metaPath, false))
             {
                 sw.Write($"Date:{DateTime.Now} TrainTime: {data.TrainTime} , ALPHA: {data.ALPHA} , EPSILON: {data.EPSILON} , Episodes: {data.Episodes} P1 Init State Values:" +
-                    $" {data.P1StateValues[0]} , {data.P1StateValues[1]} , {data.P1StateValues[2]} P2 Init State Values: {data.P2StateValues[0]} , {data.P2StateValues[1]} , {data.P2StateValues[2]} ");
+                    $" {data.P1Policy[0]} , {data.P1Policy[1]} , {data.P1Policy[2]} P2 Init State Values: {data.P2Policy[0]} , {data.P2Policy[1]} , {data.P2Policy[2]} ");
             }
             using (StreamWriter sw = new StreamWriter(velPath1, false))
             {

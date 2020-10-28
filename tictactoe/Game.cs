@@ -53,7 +53,8 @@ namespace tictactoe
                             RunEasyAiPlay(rules, draw, input);
                             break;
                         case (int)GameOptions.HardAiPlay:
-                            Console.WriteLine("Case 2");
+                            draw.NotImplemented();
+                            Console.ReadLine();
                             break;
                         case (int)GameOptions.TrainAi:
                             draw.EnterEpisodes();

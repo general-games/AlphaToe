@@ -8,8 +8,8 @@ namespace tictactoe
     class Agent
     {
         public int Player { get; set; }
-        public float WinVal { get;private set; }
-        public float LoseVal { get;private set; }
+        public float Reward { get;private set; }
+        public float Penalty { get;private set; }
         public float DrawVal { get;private set; }
 
         private Initialize init = new Initialize();
@@ -17,15 +17,24 @@ namespace tictactoe
         private State statePrevious;
         Random random;
 
-        public Agent(int player, State startState, Random random, float winValue, float loseValue, float drawVal)
+        public Agent(int player, State startState, Random random, float reward, float penalty, float drawVal)
         {
             this.Player = player;
             this.random = random;
-            this.WinVal = winValue;
-            this.LoseVal = loseValue;
+            this.Reward = reward;
+            this.Penalty = penalty;
             this.DrawVal = drawVal;
-            states = InitStates(player, winValue, loseValue, drawVal);
+            states = InitStates(init,player, reward, penalty, drawVal);
             statePrevious = GetStateFromExt(startState);
+        }
+        public Agent(State startState, Random random, float reward, float penalty, float drawVal)
+        {
+            states = InitStates(init);
+            statePrevious = GetStateFromExt(startState);
+            this.random = random;
+            this.Reward = reward;
+            this.Penalty = penalty;
+            this.DrawVal = drawVal;
         }
         public Agent(int player, Random random)
         {
@@ -35,11 +44,15 @@ namespace tictactoe
         }
 
         //Meta functions
-        public List<State> InitStates(int player ,float winVal, float loseVal, float drawVal)
+        private List<State> InitStates(Initialize init, int player ,float winVal, float loseVal, float drawVal)
         {
             return init.GetValid(player, winVal, loseVal, drawVal);
         }
-        public List<State> InitStates(int player)
+        private List<State> InitStates(Initialize init)
+        {
+            return init.GetValid();
+        } 
+        private List<State> InitStates(int player)
         {
             return init.GetValid(player);
         }
@@ -86,20 +99,24 @@ namespace tictactoe
         //Training functions
         public void Train(State statePrime, float ALPHA)
         {
-           statePrevious.SetProb(TemporalDifference(statePrevious, GetStateFromExt(statePrime), ALPHA));
+           statePrevious.SetValue(TemporalDifference(statePrevious, GetStateFromExt(statePrime), ALPHA));
         }
-        public void TrainEnd(float ALPHA, float loseVal)
+        public void TrainReward(float ALPHA)
         {
-            statePrevious.SetProb(TemporalDiffernceEnd(statePrevious, ALPHA, loseVal));
+            statePrevious.SetValue(TemporalDifference(statePrevious, ALPHA, Reward));
+        }
+        public void TrainPenalty(float ALPHA)
+        {
+            statePrevious.SetValue(TemporalDifference(statePrevious, ALPHA, Penalty));
         }
         private float TemporalDifference(State state, State statePrime, float ALPHA)
         {
-            float newValue = state.Probability + (ALPHA * (statePrime.Probability - state.Probability));
+            float newValue = state.Value + (ALPHA * (statePrime.Value - state.Value));
             return newValue;
         }
-        private float TemporalDiffernceEnd(State state, float ALPHA, float loseVal)
+        private float TemporalDifference(State state, float ALPHA, float reward)
         {
-            float newValue = state.Probability + (ALPHA * (loseVal - state.Probability));
+            float newValue = state.Value + (ALPHA * (reward - state.Value));
             return newValue;
         }
         //Control functions
@@ -137,13 +154,9 @@ namespace tictactoe
             return validMoves;
 
         }
-        private float GetStateValue(State state)
-        {
-            return state.Probability;
-        }
         private List<State> GetNextValidStates(State state)
         {
-            List<State> filteredStates = states.Where(s => s.MoveNum == (state.MoveNum + 1)).OrderBy(s => -s.Probability).ToList();
+            List<State> filteredStates = states.Where(s => s.MoveNum == (state.MoveNum + 1)).OrderBy(s => -s.Value).ToList();
             for (int i = filteredStates.Count - 1; i >= 0; i--)
             {
                 int action = GetActionFromStates(state, filteredStates[i]);
@@ -165,7 +178,7 @@ namespace tictactoe
             {
                 if (i == 0)
                     maxStates.Add(availableStates[i]);
-                else if (i > 0 && availableStates[i - 1].Probability == (availableStates[i].Probability))
+                else if (i > 0 && availableStates[i - 1].Value == (availableStates[i].Value))
                     maxStates.Add(availableStates[i]);
                 else
                     break;
@@ -176,43 +189,44 @@ namespace tictactoe
         {
             return statesToShuffle.OrderBy(a => Guid.NewGuid()).ToList();
         }
-        public State GetStateFromExt(State state)
+        public State GetStateFromExt(State externalState)
         {
-            State internalState = states.First(s => s.GetSequence() == state.GetSequence());
+            State internalState = states.First(s => s.GetSequence() == externalState.GetSequence());
             return internalState;
         }
         public void SetStatePrevious(State state)
         {
             statePrevious = GetStateFromExt(state);
         }
+   
         //Debug functions:
         public void DrawPrevious()
         {
             Console.WriteLine(statePrevious.GetSequence());
         }
-        public void DrawMaxProbs(State state)
+        public void DrawMaxValue(State state)
         {
             List<State> availableStates = GetNextValidStates(state);
             List<State> maxStates = GetMaxStates(availableStates);
             foreach (State s in maxStates)
             {
-                Console.WriteLine($"Action:{GetActionFromStates(state, s)} Value:{s.Probability}");
+                Console.WriteLine($"Action:{GetActionFromStates(state, s)} Value:{s.Value}");
             }
 
         }
-        public void DrawProbs(State state)
+        public void DrawValue(State state)
         {
             List<State> availableStates = GetNextValidStates(state);
             foreach (State s in availableStates)
             {
-                Console.WriteLine(s.Probability);
+                Console.WriteLine(s.Value);
             }
         }
-
-        public void DrawProbsExt(State state)
+        public void DrawValueExt(State state)
         {
             State myState = GetStateFromExt(state);
-            Console.WriteLine($"Prob: {myState.Probability}");
+            Console.WriteLine($"Prob: {myState.Value}");
         }
+
     }
 }

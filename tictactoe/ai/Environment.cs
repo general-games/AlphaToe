@@ -8,15 +8,19 @@ namespace tictactoe
 {
     class Environment
     {
-        private float ALPHA = 0.1f;
-        private double EPSILON = 0.05f;
+        private float ALPHA;
+        private double EPSILON;
         private float reward = 1.0f;
         private float penalty = -1.0f;
-        private float drawReward = 0.3f;
+        private float drawReward = 0.0f;
+        private bool isWriteToDisk;
         private Random random;
-        public Environment(Random random)
+        public Environment(Random random, bool isWriteToDisk, float ALPHA, float EPSILON)
         {
+            this.ALPHA = ALPHA;
+            this.EPSILON = EPSILON;
             this.random = random;
+            this.isWriteToDisk = isWriteToDisk;
         }
         public Agent[] Train(int episodes)
         {
@@ -27,7 +31,7 @@ namespace tictactoe
             Agent player1 = new Agent(1, state,random, reward, penalty, drawReward);
             Agent player2 = new Agent(2, state,random, reward, penalty, drawReward);
             Draw draw = new Draw();
-            Data data = new Data(ALPHA, EPSILON, episodes, new float[] {reward, penalty, drawReward},new float[] { reward, penalty, drawReward});
+            Data data = new Data(ALPHA, EPSILON, episodes, new float[] {reward, penalty, drawReward},new float[] {reward, penalty, drawReward});
 
             bool gameOver = false;
             int counter = 0;
@@ -62,18 +66,14 @@ namespace tictactoe
                                 player1.Train(state, ALPHA);
 
                         }
-                        if (rules.CheckGameOver(state))
-                            if (rules.CheckWinner(state, 1))
-                            {
+                        if (IsGameOver(rules, state, data, player1, out bool isWin))
+                        {
+                            gameOver = true;
+                            if (isWin)
                                 player2.TrainPenalty(ALPHA);
-                                data.RecordWin(player1.Player);
-                                gameOver = true;
-                            }
-                            else
-                            {
-                                data.RecordWin(0);
-                                gameOver = true;
-                            }
+                        }
+
+
                         gameSequence[round] = state.GetSequence();
                     }
                     if (!gameOver)
@@ -90,20 +90,13 @@ namespace tictactoe
                             state.Set(playerAction, 2);
                             player2.Train(state, ALPHA);
                         }
-                        if (rules.CheckGameOver(state))
+                        if (IsGameOver(rules, state, data, player2, out bool isWin))
                         {
-                            if (rules.CheckWinner(state, player2.Player))
-                            {
+                            gameOver = true;
+                            if (isWin)
                                 player1.TrainPenalty(ALPHA);
-                                data.RecordWin(player2.Player);
-                                gameOver = true;
-                            }
-                            else
-                            {
-                                data.RecordWin(0);
-                                gameOver = true;
-                            }
                         }
+
                         gameSequence[round] = state.GetSequence();
                     }
                     round++;
@@ -120,8 +113,29 @@ namespace tictactoe
             data.SetTrainTime(stopwatch.Elapsed);
             data.RecordPlayerPolicy(player1);
             data.RecordPlayerPolicy(player2);
-            repo.Write(data);
+            if(isWriteToDisk)
+                repo.Write(data);
             return new Agent[] {player1, player2};
+        }
+        private bool IsGameOver(Rules rules, State state, Data data, Agent player, out bool isWin)
+        {
+            if (rules.CheckGameOver(state))
+            {
+                if (rules.CheckWinner(state, player.Player))
+                {
+                    data.RecordWin(player.Player);
+                    isWin = true;
+                    return true;
+                }
+                else
+                {
+                    data.RecordWin(0);
+                    isWin = false;
+                    return true;
+                }
+            }
+            isWin = false;
+            return false;
         }
     }
 }

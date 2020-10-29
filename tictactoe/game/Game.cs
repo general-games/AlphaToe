@@ -76,7 +76,6 @@ namespace tictactoe
             }
 
         }
-
         private void RunHumanPlay(Rules rules, Draw draw, Input input)
         {
             bool gameOver = false;
@@ -374,13 +373,12 @@ namespace tictactoe
         }
         private Agent[] TrainAgents(int episodes, Random random)
         {
-            Environment environment = new Environment(random);
+            Environment environment = new Environment(random, true, 0.1f, 0.1f);
             Agent[] agents = environment.Train(episodes);
             return agents;
         }
         public void DrawBase(Draw draw, State state)
         {
-            draw.Clear();
             draw.GameTitle();
             draw.Board(state);
         }

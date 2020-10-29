@@ -27,7 +27,6 @@ namespace tictactoe
                      888     888  T88b   d8888888888   888   888   Y8888   888   888   Y8888 Y88b  d88P 
                      888     888   T88b d88P     888 8888888 888    Y888 8888888 888    Y888   Y8888P88 ";
 
-
         public void Start()
         {
             string startInfoText = "Welcome to AlphaToe!";
@@ -96,6 +95,7 @@ namespace tictactoe
         }
         public void EnterAction()
         {
+            Console.WriteLine();
             string text = "Enter Move:";
             Console.Write(String.Format("{0, " + ((Console.WindowWidth / 2) + (text.Length / 2)) + "}", text));
         }

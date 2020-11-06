@@ -99,22 +99,22 @@ namespace tictactoe
         //Training functions
         public void Train(State statePrime, float ALPHA)
         {
-           statePrevious.SetValue(TemporalDifference(statePrevious, GetStateFromExt(statePrime), ALPHA));
+           statePrevious.SetValue(TDUpdate(statePrevious, GetStateFromExt(statePrime), ALPHA));
         }
         public void TrainReward(float ALPHA)
         {
-            statePrevious.SetValue(TemporalDifference(statePrevious, ALPHA, Reward));
+            statePrevious.SetValue(TDUpdate(statePrevious, ALPHA, Reward));
         }
         public void TrainPenalty(float ALPHA)
         {
-            statePrevious.SetValue(TemporalDifference(statePrevious, ALPHA, Penalty));
+            statePrevious.SetValue(TDUpdate(statePrevious, ALPHA, Penalty));
         }
-        private float TemporalDifference(State state, State statePrime, float ALPHA)
+        private float TDUpdate(State state, State statePrime, float ALPHA)
         {
             float newValue = state.Value + (ALPHA * (statePrime.Value - state.Value));
             return newValue;
         }
-        private float TemporalDifference(State state, float ALPHA, float reward)
+        private float TDUpdate(State state, float ALPHA, float reward)
         {
             float newValue = state.Value + (ALPHA * (reward - state.Value));
             return newValue;

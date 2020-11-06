@@ -21,8 +21,8 @@ namespace tictactoe
             this.EPSILON = EPSILON;
             this.random = random;
             this.isWriteToDisk = isWriteToDisk;
-        }
-        public Agent[] Train(int episodes)
+    }
+    public Agent[] Train(int episodes)
         {
             Stopwatch stopwatch = new Stopwatch();
             Repository repo = new Repository();

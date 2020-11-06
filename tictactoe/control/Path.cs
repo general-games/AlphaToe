@@ -19,14 +19,14 @@ namespace tictactoe
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append($"\\velocityP{player}.txt");
+            sb.Append($"\\velocityP{player}.csv");
             return sb.ToString();
         }
         public string NowOpening(string path)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append($"\\openings.txt");
+            sb.Append($"\\openings.csv");
             return sb.ToString();
         }
 
@@ -34,35 +34,35 @@ namespace tictactoe
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append("\\wins.txt");
+            sb.Append("\\wins.csv");
             return sb.ToString();
         }
         public string NowDraws(string path)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append("\\velocityDraws.txt");
+            sb.Append("\\velocityDraws.csv");
             return sb.ToString();
         }
         public string NowSequence(string path)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append("\\sequences.txt");
+            sb.Append("\\sequences.csv");
             return sb.ToString();
         }
         public string NowPolicy(string path, int player)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append($"\\policy{player}.txt");
+            sb.Append($"\\policy{player}.csv");
             return sb.ToString();
         }
         public string NowMeta(string path)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(path);
-            sb.Append($"\\meta.txt");
+            sb.Append($"\\meta.csv");
             return sb.ToString();
         }
 

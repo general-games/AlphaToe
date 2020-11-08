@@ -11,7 +11,7 @@ The learning happens by storing the previous state, the state before the agent m
 
 Some data using constant ALPHA, EPSILON and 25 000 training episodes:
 ![Velocity plot](http://generalgames.org/AlphaToe/velocity.png)
-The figure above plots the average recorded velocity 
+The figure above plots the average recorded result-velocity 
 
 ![Openings distribution](https://generalgames.org/AlphaToe/opening_distribution.png)
 The figure above plots the total distribution of openings by player one (5 being the middle tile)
